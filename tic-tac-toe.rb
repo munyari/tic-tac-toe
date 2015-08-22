@@ -10,8 +10,9 @@ module TicTacToe
         puts "1) Computer vs Computer"
         puts "2) Human vs Computer"
         puts "3) Human vs Human"
+        game_choice = gets.chomp.to_i
         raise ArgumentError, "Please enter a valid number between 1 and 3" unless
-          (1..3).include?(gets.chomp.to_i)
+          (1..3).include?(game_choice)
       rescue ArgumentError=>e
         puts e
         retry
