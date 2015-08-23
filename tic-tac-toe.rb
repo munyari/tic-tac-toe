@@ -49,41 +49,63 @@ module TicTacToe
       end
       rows_for_display.join("\n--+---+--\n")
     end
-
-    def turn(player, position)
-      loop do
-
+    
+    # validates the availability of a given position
+    def valid_move(pos)
+      case pos
+      when 1..3
+        return @board[0][pos-1].integer?
+      when 4..6
+        return @board[1][pos-4].integer?
+      when 7..9
+        return @board[2][pos-4].integer? 
+      else
+        return false
       end
     end
 
     # method that controls the game loop
     def play
+      loop do
 
+      end
     end
   end
 
   class Player
     attr_reader :symbol
+    def initialize(game, sym)
+      @symbol = sym
+      @game = game
+    end
   end
 
   class HumanPlayer < Player
-   
-    def take_turn
+    def initialize(game, sym)
+      super(game, sym)
+    end
 
+    def make_move
+      @game.draw
+      puts "Where would you like to move?"
+      pos = gets.chomp
+      until @game.valid_move?(pos)
+        puts "Sorry, that is not a valid move. Please try again."
+        pos = gets.chomp
+      end
+      pos
     end
   end
 
   class ComputerPlayer < Player
-
-    def take_turn(board)
-      loop do
-        x = Random.rand(9)
-        y = Random.rand(9)
-        if board[x][y].integer?
-           
-          break
-        end
-      end
+    def initialize(game, sym)
+      super(game, sym)
+    end
+    def make_move
+      begin
+        pos = Random.rand(10)
+      end until @game.valid_move?(pos)
+      pos
     end
   end
 end
