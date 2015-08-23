@@ -17,6 +17,18 @@ module TicTacToe
         puts e
         retry
       end
+      case game_choice
+      when 1
+        @p1 = ComputerPlayer.new(:X)
+        @p2 = ComputerPlayer.new(:O)
+      when 2
+        @p1 = HumanPlayer.new(:X)
+        @p2 = ComputerPlayer.new(:O)
+      when 3
+        @p1 = HumanPlayer.new(:X)
+        @p2 = HumanPlayer.new(:O)
+      end
+      play
     end
 
     # checks whether or not the game is complete
@@ -37,18 +49,42 @@ module TicTacToe
       end
       rows_for_display.join("\n--+---+--\n")
     end
+
+    def turn(player, position)
+      loop do
+
+      end
+    end
+
+    # method that controls the game loop
+    def play
+
+    end
   end
 
   class Player
-
+    attr_reader :symbol
   end
 
   class HumanPlayer < Player
+   
+    def take_turn
 
+    end
   end
 
   class ComputerPlayer < Player
 
+    def take_turn(board)
+      loop do
+        x = Random.rand(9)
+        y = Random.rand(9)
+        if board[x][y].integer?
+           
+          break
+        end
+      end
+    end
   end
 end
 
