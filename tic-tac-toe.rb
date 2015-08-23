@@ -18,14 +18,14 @@ class TicTacToe
     end
     case game_choice
     when 1
-      @p1 = ComputerPlayer.new(:X)
-      @p2 = ComputerPlayer.new(:O)
+      @p1 = ComputerPlayer.new(self, :X)
+      @p2 = ComputerPlayer.new(self, :O)
     when 2
-      @p1 = HumanPlayer.new(:X)
-      @p2 = ComputerPlayer.new(:O)
+      @p1 = HumanPlayer.new(self, :X)
+      @p2 = ComputerPlayer.new(self, :O)
     when 3
-      @p1 = HumanPlayer.new(:X)
-      @p2 = HumanPlayer.new(:O)
+      @p1 = HumanPlayer.new(self, :X)
+      @p2 = HumanPlayer.new(self, :O)
     end
     play
   end
@@ -40,6 +40,16 @@ class TicTacToe
     true
   end
 
+  # check if we have a winner
+  def check_win
+    # make this DRY, could i use a proc?
+    @board.each           { |row| return true if row.all? { |sym| sym == "X" } }
+    @board.each           { |row| return true if row.all? { |sym| sym == "O" } }
+    @board.transpose.each { |col| return true if row.all? { |sym| sym == "X" } }
+    @board.transpose.each { |col| return true if row.all? { |sym| sym == "O" } }
+    @board[0][0] == @board[1][1] && @board[1][1] == @board[2][2] ||
+      @board[2][0] == @board[1][1] && @board[1][1] == @board[0][2]
+  end
   # draws the current state of the game board
   def draw
     rows_for_display = []
@@ -65,16 +75,21 @@ class TicTacToe
 
   # method that controls the game loop
   def play
+    current_player = @p1
     loop do
-
+      current_player.play
+      break if complete?
+      current_player = current_player == @p1 : @p2
     end
+
   end
 
 
   class Player
     attr_reader :symbol
-    def initialize(game)
+    def initialize(game, sym)
       @symbol = sym
+      @game = game
     end
   end
 
@@ -100,6 +115,7 @@ class TicTacToe
       super(game, sym)
     end
     def make_move
+      sleep(3) # more realistic pacing
       begin
         pos = Random.rand(10)
       end until @game.valid_move?(pos)
