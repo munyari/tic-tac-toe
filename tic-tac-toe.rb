@@ -40,11 +40,6 @@ module TicTacToe
         return true
       end
 
-      #@board.each do |row|
-        #row.each do |cell|
-          #return false unless [:X, :O].include? cell
-        #end
-      #end
       @pos_moves == 0
     end
 
@@ -106,7 +101,7 @@ module TicTacToe
         draw
         puts "Player #{current_player == @p1 ? 2 : 1} wins!"
       else
-        puts "It is a draw"
+        puts "It's a draw!"
       end
     end
 
@@ -142,11 +137,13 @@ module TicTacToe
       super(game, sym)
     end
     def make_move
+      puts "Computer is playing..."
       sleep(1) # more realistic pacing
       begin
         return if @game.complete?
         pos = Random.rand(10)
       end until @game.valid_move?(pos)
+      puts "Computer plays on square #{pos}"
       @game.mark(pos, @symbol.to_s)
     end
   end
