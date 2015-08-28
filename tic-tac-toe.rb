@@ -35,7 +35,7 @@ module TicTacToe
     def complete?
       @board.each do |row|
         row.each do |cell|
-          return false unless (:X, :O).include? cell
+          return false unless [:X, :O].include? cell
         end
       end
       true
@@ -57,18 +57,19 @@ module TicTacToe
       @board.each do |row|
         rows_for_display << row.join(" | ")
       end
-      rows_for_display.join("\n--+---+--\n")
+      puts rows_for_display.join("\n--+---+--\n")
     end
 
     # validates the availability of a given position
-    def valid_move(pos)
+    def valid_move?(pos)
+      p @board
       case pos
       when 1..3
-        return @board[0][pos-1].integer?
+        return @board[0][pos-1].class == Fixnum
       when 4..6
-        return @board[1][pos-4].integer?
+        return @board[1][pos-4].class == Fixnum
       when 7..9
-        return @board[2][pos-7].integer? 
+        return @board[2][pos-7].class == Fixnum
       else
         return false
       end
@@ -85,21 +86,20 @@ module TicTacToe
       when 7..9
         @board[2][pos-7] = symbol
       end
+    end
 
     # method that controls the game loop
     def play
       current_player = @p1
       loop do
-        current_player.play
+        current_player.make_move
         break if complete?
-        current_player = current_player == @p1 : @p2
+        current_player = current_player == @p1 ? @p2 : @p1
       end
-
     end
 
-
+    public :draw
   end
-
 
   class Player
     attr_reader :symbol
@@ -117,10 +117,10 @@ module TicTacToe
     def make_move
       @game.draw
       puts "Where would you like to move?"
-      pos = gets.chomp
+      pos = gets.chomp.to_i
       until @game.valid_move?(pos)
         puts "Sorry, that is not a valid move. Please try again."
-        pos = gets.chomp
+        pos = gets.chomp.to_i
       end
       @game.mark(pos, @symbol.to_s)
     end
@@ -131,7 +131,7 @@ module TicTacToe
       super(game, sym)
     end
     def make_move
-      sleep(3) # more realistic pacing
+      #sleep(3) # more realistic pacing
       begin
         pos = Random.rand(10)
       end until @game.valid_move?(pos)
@@ -141,4 +141,4 @@ module TicTacToe
 end
 
 # TODO: Valid move setting
-Game.new
+TicTacToe::Game.new
