@@ -23,16 +23,12 @@ module TicTacToe
       end
       case game_choice
       when 1
-        @p1 = ComputerPlayer.new(self, :X)
-        @p2 = ComputerPlayer.new(self, :O)
+        play(ComputerPlayer.new(self, :X), ComputerPlayer.new(self, :O))
       when 2
-        @p1 = HumanPlayer.new(self, :X)
-        @p2 = ComputerPlayer.new(self, :O)
+        play(HumanPlayer.new(self, :X), ComputerPlayer.new(self, :O))
       when 3
-        @p1 = HumanPlayer.new(self, :X)
-        @p2 = HumanPlayer.new(self, :O)
+        play(HumanPlayer.new(self, :X), HumanPlayer.new(self, :O))
       end
-      play
     end
 
     # draws the current state of the game board
@@ -96,15 +92,15 @@ module TicTacToe
     end
 
     # method that controls the game loop
-    def play
-      current_player = @p1
+    def play(p1, p2)
+      current_player = p1
       begin
         current_player.make_move
-        current_player = current_player == @p1 ? @p2 : @p1
+        current_player = current_player == p1 ? p2 : p1
       end until complete?
       if @win
         draw
-        puts "Player #{current_player == @p1 ? 2 : 1} wins!"
+        puts "Player #{current_player == p1 ? 2 : 1} wins!"
       else
         puts "It's a draw!"
       end
