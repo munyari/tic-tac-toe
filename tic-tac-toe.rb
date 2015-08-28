@@ -5,6 +5,7 @@ module TicTacToe
       @board = [[1, 2, 3],
                 [4, 5, 6],
                 [7, 8, 9]]
+      @win = false
       puts "Welcome to tic-tac 3000! Please select a game mode below."
       begin
         puts "1) Computer vs Computer"
@@ -33,6 +34,11 @@ module TicTacToe
 
     # checks whether or not the game is complete
     def complete?
+      if check_win
+        @win = true
+        return true
+      end
+
       @board.each do |row|
         row.each do |cell|
           return false unless [:X, :O].include? cell
@@ -46,8 +52,8 @@ module TicTacToe
       # make this DRY, could i use a proc?
       @board.each           { |row| return true if row.all? { |sym| sym == "X" } }
       @board.each           { |row| return true if row.all? { |sym| sym == "O" } }
-      @board.transpose.each { |col| return true if row.all? { |sym| sym == "X" } }
-      @board.transpose.each { |col| return true if row.all? { |sym| sym == "O" } }
+      @board.transpose.each { |col| return true if col.all? { |sym| sym == "X" } }
+      @board.transpose.each { |col| return true if col.all? { |sym| sym == "O" } }
       @board[0][0] == @board[1][1] && @board[1][1] == @board[2][2] ||
         @board[2][0] == @board[1][1] && @board[1][1] == @board[0][2]
     end
@@ -62,7 +68,6 @@ module TicTacToe
 
     # validates the availability of a given position
     def valid_move?(pos)
-      p @board
       case pos
       when 1..3
         return @board[0][pos-1].class == Fixnum
@@ -95,6 +100,10 @@ module TicTacToe
         current_player.make_move
         break if complete?
         current_player = current_player == @p1 ? @p2 : @p1
+      end
+      if @win
+        draw
+        puts "Player #{current_player == @p1 ? 1 : 2} wins!"
       end
     end
 
@@ -131,7 +140,7 @@ module TicTacToe
       super(game, sym)
     end
     def make_move
-      #sleep(3) # more realistic pacing
+      sleep(1) # more realistic pacing
       begin
         pos = Random.rand(10)
       end until @game.valid_move?(pos)
