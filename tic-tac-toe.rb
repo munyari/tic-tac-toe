@@ -77,16 +77,16 @@ module TicTacToe
     end
 
     # mark the game board with the appropriate symbol
-    # TODO: make this and previous method DRY
     def mark(pos, symbol)
       @pos_moves -= 1
+      mark_cell = proc { |i, j| @board[i][j] = symbol }
       case pos
       when 1..3
-        @board[0][pos-1] = symbol
+        mark_cell.call(0, pos-1)
       when 4..6
-        @board[1][pos-4] = symbol
+        mark_cell.call(1, pos-4)
       when 7..9
-        @board[2][pos-7] = symbol
+        mark_cell.call(2, pos-7)
       end
     end
 
