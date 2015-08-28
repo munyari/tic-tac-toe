@@ -45,7 +45,6 @@ module TicTacToe
 
     # check if we have a winner
     def check_win
-      # make this DRY, could i use a proc?
       @board.each           { |row| return true if row.all? { |sym| sym == "X" } }
       @board.each           { |row| return true if row.all? { |sym| sym == "O" } }
       @board.transpose.each { |col| return true if col.all? { |sym| sym == "X" } }
@@ -64,15 +63,16 @@ module TicTacToe
 
     # validates the availability of a given position
     def valid_move?(pos)
+      validate = proc { |i, j| @board[i][j].class == Fixnum }
       case pos
       when 1..3
-        return @board[0][pos-1].class == Fixnum
+        validate.call(0, pos-1)
       when 4..6
-        return @board[1][pos-4].class == Fixnum
+        validate.call(1, pos-4)
       when 7..9
-        return @board[2][pos-7].class == Fixnum
+        validate.call(2, pos-7)
       else
-        return false
+        false
       end
     end
 
