@@ -6,6 +6,7 @@ module TicTacToe
                 [4, 5, 6],
                 [7, 8, 9]]
       @win = false
+      @pos_moves = 9 # the number of moves possible in a game, total
       puts "Welcome to tic-tac 3000! Please select a game mode below."
       begin
         puts "1) Computer vs Computer"
@@ -39,12 +40,12 @@ module TicTacToe
         return true
       end
 
-      @board.each do |row|
-        row.each do |cell|
-          return false unless [:X, :O].include? cell
-        end
-      end
-      true
+      #@board.each do |row|
+        #row.each do |cell|
+          #return false unless [:X, :O].include? cell
+        #end
+      #end
+      @pos_moves == 0
     end
 
     # check if we have a winner
@@ -83,6 +84,7 @@ module TicTacToe
     # mark the game board with the appropriate symbol
     # TODO: make this and previous method DRY
     def mark(pos, symbol)
+      @pos_moves -= 1
       case pos
       when 1..3
         @board[0][pos-1] = symbol
@@ -96,18 +98,18 @@ module TicTacToe
     # method that controls the game loop
     def play
       current_player = @p1
-      loop do
+      begin
         current_player.make_move
-        break if complete?
         current_player = current_player == @p1 ? @p2 : @p1
-      end
+      end until complete?
       if @win
         draw
-        puts "Player #{current_player == @p1 ? 1 : 2} wins!"
+        puts "Player #{current_player == @p1 ? 2 : 1} wins!"
+      else
+        puts "It is a draw"
       end
     end
 
-    public :draw
   end
 
   class Player
@@ -142,6 +144,7 @@ module TicTacToe
     def make_move
       sleep(1) # more realistic pacing
       begin
+        return if @game.complete?
         pos = Random.rand(10)
       end until @game.valid_move?(pos)
       @game.mark(pos, @symbol.to_s)
