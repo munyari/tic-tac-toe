@@ -1,5 +1,7 @@
+#== Tic Tac Toe
 # A playable tic tac toe game
 module TicTacToe
+  # Game class defines the template for a game
   class Game
     def initialize
       @board = [[1, 2, 3],
@@ -33,25 +35,6 @@ module TicTacToe
       play
     end
 
-    # checks whether or not the game is complete
-    def complete?
-      if check_win
-        @win = true
-        return true
-      end
-
-      @pos_moves == 0
-    end
-
-    # check if we have a winner
-    def check_win
-      @board.each           { |row| return true if row.all? { |sym| sym == "X" } }
-      @board.each           { |row| return true if row.all? { |sym| sym == "O" } }
-      @board.transpose.each { |col| return true if col.all? { |sym| sym == "X" } }
-      @board.transpose.each { |col| return true if col.all? { |sym| sym == "O" } }
-      @board[0][0] == @board[1][1] && @board[1][1] == @board[2][2] ||
-        @board[2][0] == @board[1][1] && @board[1][1] == @board[0][2]
-    end
     # draws the current state of the game board
     def draw
       rows_for_display = []
@@ -90,6 +73,28 @@ module TicTacToe
       end
     end
 
+    # checks whether or not the game is complete
+    def complete?
+      if check_win
+        @win = true
+        return true
+      end
+
+      @pos_moves == 0
+    end
+
+    private
+
+    # check if we have a winner
+    def check_win
+      @board.each           { |row| return true if row.all? { |sym| sym == "X" } }
+      @board.each           { |row| return true if row.all? { |sym| sym == "O" } }
+      @board.transpose.each { |col| return true if col.all? { |sym| sym == "X" } }
+      @board.transpose.each { |col| return true if col.all? { |sym| sym == "O" } }
+      @board[0][0] == @board[1][1] && @board[1][1] == @board[2][2] ||
+        @board[2][0] == @board[1][1] && @board[1][1] == @board[0][2]
+    end
+
     # method that controls the game loop
     def play
       current_player = @p1
@@ -107,19 +112,22 @@ module TicTacToe
 
   end
 
+  # a Tic Tac Toe player
   class Player
-    attr_reader :symbol
+    # create a new player
     def initialize(game, sym)
       @symbol = sym
       @game = game
     end
   end
 
+  # a human player
   class HumanPlayer < Player
     def initialize(game, sym)
       super(game, sym)
     end
 
+    # make a move by prompting the player
     def make_move
       @game.draw
       puts "Where would you like to move?"
@@ -132,10 +140,13 @@ module TicTacToe
     end
   end
 
+  # a computer player
   class ComputerPlayer < Player
     def initialize(game, sym)
       super(game, sym)
     end
+
+    # make a move by taking a random available square
     def make_move
       puts "Computer is playing..."
       sleep(1) # more realistic pacing
@@ -149,5 +160,4 @@ module TicTacToe
   end
 end
 
-# TODO: Valid move setting
 TicTacToe::Game.new
